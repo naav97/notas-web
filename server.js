@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
+const methodOverrite = require('method-override')
 
 const initialize = require('./passport-config')
 
@@ -28,20 +29,21 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(methodOverrite('_method'))
 
 app.get('/', checkAuthenticated, (req, res) => {
 	res.render('index.ejs', { name: req.user.name })
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', checkNotAuthenticated, (req, res) => {
 	res.render('login.ejs')
 })
 
-app.get('/register', (req, res) => {
+app.get('/register', checkNotAuthenticated, (req, res) => {
 	res.render('register.ejs')
 })
 
-app.post('/register', async (req, res) => {
+app.post('/register', checkNotAuthenticated, async (req, res) => {
 	try{
 		const hashedPassword = await bcrypt.hash(req.body.password, 10)
 		users.push({
@@ -56,17 +58,29 @@ app.post('/register', async (req, res) => {
 	}
 })
 
-app.post('/login', passport.authenticate('local', {
+app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
 	successRedirect: '/',
 	failureRedirect: '/login',
 	failureFlash: true
 }))
+
+app.delete('/logout', (req, res) => {
+	req.logOut()
+	res.redirect('/login')
+})
 
 function checkAuthenticated(req, res, next) {
 	if(req.isAuthenticated()) {
 		return next()
 	}
 	res.redirect('/login')
+}
+
+function checkNotAuthenticated(req, res, next) {
+	if(req.isAuthenticated()) {
+		return res.redirect('/')
+	}
+	next()
 }
 
 app.listen(3000)

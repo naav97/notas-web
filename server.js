@@ -11,6 +11,7 @@ const session = require('express-session')
 const methodOverrite = require('method-override')
 
 const initialize = require('./passport-config')
+const clases = require('./materias-persist')
 
 initialize(passport, 
 	email => users.find(user => user.email === email),
@@ -32,6 +33,7 @@ app.use(passport.session())
 app.use(methodOverrite('_method'))
 
 app.get('/', checkAuthenticated, (req, res) => {
+	let clases = clases.getMaterias()
 	res.render('index.ejs', { name: req.user.name })
 })
 

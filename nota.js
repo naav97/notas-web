@@ -1,4 +1,4 @@
-export class Nota {
+class Nota {
 	constructor(nombre, porcentage) {
 		this.nombre = nombre;
 		this.porcentage = porcentage;
@@ -6,3 +6,5 @@ export class Nota {
 		this.obtenida = false;
 	}
 }
+
+module.exports.Nota = Nota

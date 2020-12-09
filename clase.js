@@ -1,6 +1,6 @@
-import Nota from './nota'
+const Nota = require('./nota')
 
-export class Clase {
+class Clase {
 	constructor(nombre) {
 		this.nombre = nombre;
 		this.notas = [];
@@ -11,6 +11,12 @@ export class Clase {
 	}
 
 	deleteNota(nota) {
-		delete nota;
+		for(var i = 0; i < this.notas.length; i++){
+			if(this.notas[i] === nota){
+				this.notas.splice(i,1)
+			}
+		}
 	}
 }
+
+module.exports.Clase = Clase

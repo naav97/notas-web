@@ -1,0 +1,6 @@
+extends layout
+
+block content
+  h1= clase.nombre
+  each n in clase.notas
+    p #{n.nombre} vale #{n.porcentage} %, nota: #{n.puntos}

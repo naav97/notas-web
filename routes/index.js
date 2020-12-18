@@ -37,4 +37,13 @@ router.get('/:nombre', function(req, res, next) {
 	res.render('clase', {clase: cl[0]});
 });
 
+router.post('/', function(req, res, next) {
+	const newClase = {
+		nombre: req.body.nombre,
+		notas: []
+	}
+	clases.push(newClase);
+	res.redirect('/');
+})
+
 module.exports = router;

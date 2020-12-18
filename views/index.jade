@@ -3,6 +3,9 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  form(action='/' method='POST')
+    label(for='clase') Agragar nueva clase
+    input(type='text' name='nombre')
   each c in clases
     a(href='/#{c.nombre}')= c.nombre
     br

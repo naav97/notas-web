@@ -46,4 +46,18 @@ router.post('/', function(req, res, next) {
 	res.redirect('/');
 })
 
+router.post('/:nombre', function(req, res, next) {
+	const clase = clases.filter(clase => clase.nombre === req.params.nombre);
+	//console.log(clase)
+	const newNota = {
+		nombre: req.body.nombre,
+		porcentage: req.body.porcentage,
+		puntos: 0,
+		obtenida: false
+	}
+	clase[0].notas.push(newNota);
+	var url = '/'+clase[0].nombre
+	res.redirect(url);
+})
+
 module.exports = router;

@@ -2,5 +2,10 @@ extends layout
 
 block content
   h1= clase.nombre
+  form(action='/#{clase.nombre}' method='POST')
+    label(for='nota') Agragar nueva nota
+    input(type='text' name='nombre')
+    input(type='number' name='porcentage')
+    input(type='submit' value='crear')
   each n in clase.notas
     p #{n.nombre} vale #{n.porcentage} %, nota: #{n.puntos}

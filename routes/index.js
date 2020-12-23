@@ -28,6 +28,7 @@ var clases = [
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	console.log(clases)
   res.render('index', { title: 'Notas Web', clases: clases });
 });
 
@@ -44,7 +45,7 @@ router.post('/', function(req, res, next) {
 	}
 	clases.push(newClase);
 	res.redirect('/');
-})
+});
 
 router.post('/:nombre', function(req, res, next) {
 	const clase = clases.filter(clase => clase.nombre === req.params.nombre);
@@ -58,6 +59,13 @@ router.post('/:nombre', function(req, res, next) {
 	clase[0].notas.push(newNota);
 	var url = '/'+clase[0].nombre
 	res.redirect(url);
+})
+
+router.post('/:nombre/update', function(req, res, next) {
+	const upClass = req.body;
+	const clase = clases.filter(clase => clase.nombre === req.params.nombre);
+	clase.nombre = upClass.nombre ? upClass.nombre : clase.nombre;
+	res.redirect('/');
 })
 
 module.exports = router;

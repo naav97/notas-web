@@ -8,4 +8,6 @@ block content
     input(type='text' name='nombre')
   each c in clases
     a(href='/#{c.nombre}')= c.nombre
+    form(action='/#{c.nombre}/update' method='POST' id='formClassUp')
+      input(type='text' name='nombre')
     br

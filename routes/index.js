@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var clase = require('../clase');
+const sqlite3 = require('sqlite3').verbose();
 
 var clases = [
 	{
@@ -26,10 +26,35 @@ var clases = [
 	},
 ]
 
+function connec() {
+	db = new sqlite3.Database('./notas.db', (err) => {
+		if(err) {
+			console.error(err.message)
+		}
+		console.log('Conectado a la db')
+	})
+}
+
+function diss() {
+	db.close((err) => {
+		if(err) {
+			console.error(err.message)
+		}
+		console.log('Desconectado de la db')
+	})	
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	console.log(clases)
-  res.render('index', { title: 'Notas Web', clases: clases });
+	connec();
+	let sql = `SELECT * FROM clases`;
+	db.all(sql, [], (err, rows) => { 
+		if(err) {
+			throw err;
+		}
+		res.render('index', { title: "Notas Web", clases: rows});
+	});
+	diss();
 });
 
 router.get('/:nombre', function(req, res, next) {

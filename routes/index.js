@@ -58,9 +58,25 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:nombre', function(req, res, next) {
-	const cl = clases.filter(clase => clase.nombre === req.params.nombre);
-	//res.json(cl[0])
-	res.render('clase', {clase: cl[0]});
+	connec();
+	let sql1 = `SELECT * FROM clases WHERE nombre = ?`;
+	let sql2 = `SELECT * FROM notas WHERE clase = ?`;
+	var cl;
+	console.log(cl);
+	db.get(sql1, [req.params.nombre], (err, rows) => {
+		if(err) {
+			throw err;
+		}
+		cl = rows;
+		db.all(sql2, [req.params.nombre], (err2, rows2) => {
+			if(err2) {
+				throw err2;
+			}
+			cl.notas = rows2;
+			res.render('clase', {clase: cl});
+		});
+	});
+	diss();
 });
 
 router.post('/', function(req, res, next) {

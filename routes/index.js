@@ -1,4 +1,5 @@
 var express = require('express');
+const Clase = require('../clase');
 var router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 
@@ -57,26 +58,34 @@ router.get('/', function(req, res, next) {
 	diss();
 });
 
-router.get('/:nombre', function(req, res, next) {
-	connec();
-	let sql1 = `SELECT * FROM clases WHERE nombre = ?`;
-	let sql2 = `SELECT * FROM notas WHERE clase = ?`;
-	var cl;
-	console.log(cl);
-	db.get(sql1, [req.params.nombre], (err, rows) => {
-		if(err) {
-			throw err;
-		}
-		cl = rows;
-		db.all(sql2, [req.params.nombre], (err2, rows2) => {
-			if(err2) {
-				throw err2;
+router.get('/:nombre', function(req, res) {
+	let url = req.params.nombre;
+	if(url === "favicon.ico") {
+		console.log(url);
+		res.status(204).send('');
+	}
+	else {
+		connec();
+		let sql1 = `SELECT * FROM clases WHERE nombre = ?`;
+		let sql2 = `SELECT * FROM notas WHERE clase = ?`;
+		var cl = new Clase.Clase();
+		console.log(cl);
+		db.get(sql1, [req.params.nombre], (err, rows) => {
+			if(err) {
+				throw err;
 			}
-			cl.notas = rows2;
-			res.render('clase', {clase: cl});
+			cl.nombre = rows.nombre;
+			console.log(cl);
+			db.all(sql2, [req.params.nombre], (err2, rows2) => {
+				if(err2) {
+					throw err2;
+				}
+				cl.notas = rows2;
+				res.render('clase', {clase: cl});
+			});
 		});
-	});
-	diss();
+		diss();
+	}	
 });
 
 router.post('/', function(req, res, next) {

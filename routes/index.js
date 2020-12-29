@@ -89,12 +89,15 @@ router.get('/:nombre', function(req, res) {
 });
 
 router.post('/', function(req, res, next) {
-	const newClase = {
-		nombre: req.body.nombre,
-		notas: []
-	}
-	clases.push(newClase);
-	res.redirect('/');
+	connec();
+	let sql = `INSERT INTO clases(nombre) VALUES(?)`;
+	db.run(sql, [req.body.nombre], (err) => {
+		if(err) {
+			throw err;
+		}
+		res.redirect('/');
+	})
+	diss();
 });
 
 router.post('/:nombre', function(req, res, next) {

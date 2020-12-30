@@ -69,13 +69,11 @@ router.get('/:nombre', function(req, res) {
 		let sql1 = `SELECT * FROM clases WHERE nombre = ?`;
 		let sql2 = `SELECT * FROM notas WHERE clase = ?`;
 		var cl = new Clase.Clase();
-		console.log(cl);
 		db.get(sql1, [req.params.nombre], (err, rows) => {
 			if(err) {
 				throw err;
 			}
 			cl.nombre = rows.nombre;
-			console.log(cl);
 			db.all(sql2, [req.params.nombre], (err2, rows2) => {
 				if(err2) {
 					throw err2;
@@ -101,17 +99,15 @@ router.post('/', function(req, res, next) {
 });
 
 router.post('/:nombre', function(req, res, next) {
-	const clase = clases.filter(clase => clase.nombre === req.params.nombre);
-	//console.log(clase)
-	const newNota = {
-		nombre: req.body.nombre,
-		porcentage: req.body.porcentage,
-		puntos: 0,
-		obtenida: false
-	}
-	clase[0].notas.push(newNota);
-	var url = '/'+clase[0].nombre
-	res.redirect(url);
+	connec();
+	let sql = `INSERT INTO notas(nombre, porcentage, puntos, obtenida, clase) VALUES(?,?,0,0,?)`
+	db.run(sql, [req.body.nombre, req.body.porcentage, req.params.nombre], (err) => {
+		if(err) {
+			throw err;
+		}
+		var url = '/'+req.params.nombre;
+		res.redirect(url);
+	})	
 })
 
 router.post('/:nombre/update', function(req, res, next) {

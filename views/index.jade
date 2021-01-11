@@ -5,9 +5,10 @@ block content
   p Welcome to #{title}
   form(action='/' method='POST')
     label(for='clase') Agragar nueva clase
-    input(type='text' name='nombre')
+    input(type='text' id='clase' name='nombre')
   each c in clases
     a(href='/#{c.nombre}')= c.nombre
-    form(action='/#{c.nombre}/update' method='POST' id='formClassUp')
+    button(onclick='edit("formClassUp#{c.nombre}")')= 'Editar'
+    form(action='/#{c.nombre}/update' method='POST' id='formClassUp#{c.nombre}' class='formUp')
       input(type='text' name='nombre')
     br

@@ -61,7 +61,6 @@ router.get('/', function(req, res, next) {
 router.get('/:nombre', function(req, res) {
 	let url = req.params.nombre;
 	if(url === "favicon.ico") {
-		console.log(url);
 		res.status(204).send('');
 	}
 	else {
@@ -107,14 +106,20 @@ router.post('/:nombre', function(req, res, next) {
 		}
 		var url = '/'+req.params.nombre;
 		res.redirect(url);
-	})	
+	})
+	diss();
 })
 
 router.post('/:nombre/update', function(req, res, next) {
-	const upClass = req.body;
-	const clase = clases.filter(clase => clase.nombre === req.params.nombre);
-	clase.nombre = upClass.nombre ? upClass.nombre : clase.nombre;
-	res.redirect('/');
+	connec();
+	let sql = `UPDATE clases SET nombre = ? WHERE nombre = ?`;
+	db.run(sql, [req.body.nombre, req.params.nombre], (err) => {
+		if(err) {
+			throw err;
+		}
+		res.redirect('/');
+	})
+	diss();
 })
 
 module.exports = router;
